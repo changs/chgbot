@@ -84,7 +84,7 @@ class IRC
     return @nicks
   end
   def parse_irc(s)
-    if s.include? "PRIVMSG #Specgrupen :#{@nick}:"
+    if s.include? "PRIVMSG #{@channel} :#{@nick}:"
       log_rcv s
       idx = s.index("!") - 1
       username = s[1, idx]
@@ -120,7 +120,7 @@ class IRC
         message = random_quote
       end
 
-      send "PRIVMSG #Specgrupen :#{username}: #{message}" if message
+      send "PRIVMSG #{@channel} :#{username}: #{message}" if message
     elsif s.include? "NICK"
       idx = s.index("!") - 1
       username = s[1, idx]
@@ -135,9 +135,9 @@ class IRC
       idx = s.index("!") - 1
       username = s[1, idx]
       @nicks.push(username)
-      send "PRIVMSG #Specgrupen :Czolem #{username}" unless s.include? "#{@nick}"
+      send "PRIVMSG #{@channel} :Czolem #{username}" unless s.include? "#{@nick}"
     
-    elsif ((s.include? "PART :#Specgrupen") || (s.include? "QUIT"))
+    elsif ((s.include? "PART :#{@channel}") || (s.include? "QUIT"))
       log_rcv s
       idx = s.index("!") - 1
       username = s[1, idx]
@@ -186,7 +186,7 @@ def random_quote
   return quotes[rand(quotes.length)]
 end
 
-irc = IRC.new('irc.freenode.net', 6667, 'Stara', '#Specgrupen')
+irc = IRC.new('irc.oftc.net', 6667, 'Stara', '#Supen')
 irc.connect()
 begin
   irc.main_loop()
